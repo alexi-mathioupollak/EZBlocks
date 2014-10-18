@@ -1,0 +1,18 @@
+name: EZBlocks
+main: me.clip.ezblocks.EZBlocks
+version: 1.0
+author: extended_clip
+description: Count players blocks broken
+softdepend: [EZRanksLite]
+permissions:
+    ezblocks.check:
+        description: access to check others blocks broken by command
+        default: op
+    ezblocks.admin:
+        description: access to reload and version commands
+        default: op
+commands:
+   ezblocks:
+     description: EZBlocks main command
+     aliases: [blocks]
+     
