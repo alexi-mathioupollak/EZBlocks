@@ -97,7 +97,7 @@ public class BreakHandler implements Listener {
 
 						for (int l = 0; l < lore.size(); l++) {
 							String line = lore.get(l);
-							if (line.contains("§7Blocks broken: §6")) {
+							if (line.contains("§7Blocks broken: §e")) {
 								contains = true;
 								replace = line;
 								lore.remove(line);
@@ -106,23 +106,23 @@ public class BreakHandler implements Listener {
 						}
 
 						if (contains && replace != null) {
-							String num = replace.replace("§7Blocks broken: §6", "");
+							String num = replace.replace("§7Blocks broken: §e", "");
 
 							if (!isInt(num)) {
-								lore.add("§7Blocks broken: §61");
+								lore.add("§7Blocks broken: §e1");
 								im.setLore(lore);
 								i.setItemMeta(im);
 								return;
 							}
 
 							int updated = Integer.parseInt(num.trim()) + 1;
-							lore.add("§7Blocks broken: §6" + updated);
+							lore.add("§7Blocks broken: §e" + updated);
 							im.setLore(lore);
 							i.setItemMeta(im);
 							return;
 
 						} else {
-							lore.add("§7Blocks broken: §61");
+							lore.add("§7Blocks broken: §e1");
 							im.setLore(lore);
 							i.setItemMeta(im);
 							return;
@@ -130,7 +130,7 @@ public class BreakHandler implements Listener {
 
 					} else {
 						List<String> lore = Arrays
-								.asList(new String[] { "§7Blocks broken: §61" });
+								.asList(new String[] { "§7Blocks broken: §e1" });
 						im.setLore(lore);
 						i.setItemMeta(im);
 						return;

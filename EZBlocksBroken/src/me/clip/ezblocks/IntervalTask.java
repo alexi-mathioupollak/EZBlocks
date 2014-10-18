@@ -24,7 +24,7 @@ public class IntervalTask implements Runnable {
 			plugin.playerconfig.savePlayer(uuid, save.get(uuid));
 		}
 		
-		//ill set to  debug only option in the future
+		//set to debug only option in the future
 		System.out.println("[EZBlocks] "+save.size()+" players saved!");
 		save = null;
 	}
