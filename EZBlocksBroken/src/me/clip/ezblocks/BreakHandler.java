@@ -26,19 +26,19 @@ public class BreakHandler implements Listener {
 	public BreakHandler(EZBlocks i) {
 		plugin = i;
 	}
-	
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
 
 		String uuid = e.getPlayer().getUniqueId().toString();
-		
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new LoadTask(plugin, uuid));
-		
+
+		plugin.getServer().getScheduler()
+				.runTaskAsynchronously(plugin, new LoadTask(plugin, uuid));
+
 		if (EZBlocks.useEZRanks) {
-			
+
 			if (breaks.containsKey(uuid)) {
-				
+
 				EZRanksLite.getAPI().setPlayerPlaceholder(
 						e.getPlayer().getName(), "%blocksbroken%",
 						breaks.get(uuid) + "");
@@ -49,41 +49,48 @@ public class BreakHandler implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
-		
+
 		String uuid = e.getPlayer().getUniqueId().toString();
-		
+
 		if (breaks.containsKey(uuid)) {
-			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new SaveTask(plugin, uuid, breaks.get(uuid)));
+			plugin.getServer()
+					.getScheduler()
+					.runTaskAsynchronously(plugin,
+							new SaveTask(plugin, uuid, breaks.get(uuid)));
 			breaks.remove(uuid);
 		}
-		
-		
+
 	}
-	
+
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		
+
 		String uuid = e.getPlayer().getUniqueId().toString();
-		
+
 		if (breaks.containsKey(uuid)) {
-			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new SaveTask(plugin, uuid, breaks.get(uuid)));
+			plugin.getServer()
+					.getScheduler()
+					.runTaskAsynchronously(plugin,
+							new SaveTask(plugin, uuid, breaks.get(uuid)));
 			breaks.remove(uuid);
 		}
 	}
-	
-	//leaving priority at default to hopefully not interfere with auto inventory plugins
+
+	// leaving priority at default to hopefully not interfere with auto
+	// inventory plugins
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent e) {
 
-		if (EZBlocks.options.getEnabledWorlds().contains(e.getPlayer().getWorld().getName())
+		if (EZBlocks.options.getEnabledWorlds().contains(
+				e.getPlayer().getWorld().getName())
 				|| EZBlocks.options.getEnabledWorlds().contains("all")) {
-			
-			
-			if (EZBlocks.options.onlyBelowY() 
-					&& e.getBlock().getLocation().getBlockY() > EZBlocks.options.getBelowYCoord()) {
+
+			if (EZBlocks.options.onlyBelowY()
+					&& e.getBlock().getLocation().getBlockY() > EZBlocks.options
+							.getBelowYCoord()) {
 				return;
 			}
 
@@ -99,45 +106,42 @@ public class BreakHandler implements Listener {
 				int b;
 
 				if (!breaks.containsKey(uuid)) {
-					
+
 					if (plugin.playerconfig.hasData(uuid)) {
-						
 						b = plugin.playerconfig.getBlocksBroken(uuid) + 1;
-						
 					} else {
-						
 						b = 1;
-						
 					}
 
 				} else {
-					
+
 					b = breaks.get(uuid) + 1;
-					
+
 				}
 
 				breaks.put(uuid, b);
 
 				if (plugin.rewards.shouldGiveReward(b)) {
-					
+
 					plugin.rewards.giveReward(e.getPlayer());
-					
+
 				}
 
 				if (EZBlocks.useEZRanks) {
-					
-					EZRanksLite.getAPI().setPlayerPlaceholder(e.getPlayer().getName(), "%blocksbroken%", b + "");
-					
-				}
-				
-				if (EZBlocks.options.pickaxeNeverBreaks()) {
-					
-					i.setDurability((short)0);
-					
+
+					EZRanksLite.getAPI().setPlayerPlaceholder(
+							e.getPlayer().getName(), "%blocksbroken%", b + "");
+
 				}
 
-				if(EZBlocks.options.usePickCounter()) {
-					
+				if (EZBlocks.options.pickaxeNeverBreaks()) {
+
+					i.setDurability((short) 0);
+
+				}
+
+				if (EZBlocks.options.usePickCounter()) {
+
 					ItemMeta im = i.getItemMeta();
 
 					if (i.hasItemMeta() && im.hasLore()) {
@@ -145,15 +149,15 @@ public class BreakHandler implements Listener {
 						List<String> lore = im.getLore();
 
 						boolean contains = false;
-						
+
 						String replace = "";
 
 						for (int l = 0; l < lore.size(); l++) {
-							
+
 							String line = lore.get(l);
-							
+
 							if (line.contains("§7Blocks broken: §e")) {
-								
+
 								contains = true;
 								replace = line;
 								lore.remove(line);
@@ -161,15 +165,16 @@ public class BreakHandler implements Listener {
 							}
 						}
 
-					if (contains && replace != null) {
-						
-						String num = replace.replace("§7Blocks broken: §e", "");
+						if (contains && replace != null) {
 
-						if (!isInt(num)) {
-							
-							lore.add("§7Blocks broken: §e1");
-							im.setLore(lore);
-							i.setItemMeta(im);
+							String num = replace.replace("§7Blocks broken: §e",
+									"");
+
+							if (!isInt(num)) {
+
+								lore.add("§7Blocks broken: §e1");
+								im.setLore(lore);
+								i.setItemMeta(im);
 								return;
 							}
 
@@ -180,7 +185,7 @@ public class BreakHandler implements Listener {
 							return;
 
 						} else {
-							
+
 							lore.add("§7Blocks broken: §e1");
 							im.setLore(lore);
 							i.setItemMeta(im);
@@ -188,13 +193,13 @@ public class BreakHandler implements Listener {
 						}
 
 					} else {
-						
+
 						List<String> lore = Arrays
 								.asList(new String[] { "§7Blocks broken: §e1" });
 						im.setLore(lore);
 						i.setItemMeta(im);
 						return;
-					}	
+					}
 				}
 			}
 		}
