@@ -1,9 +1,8 @@
 package me.clip.ezblocks;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -13,41 +12,46 @@ public class EZBlocks extends JavaPlugin {
 	protected EZBlocksConfig config = new EZBlocksConfig(this);
 	protected BreakHandler breakhandler = new BreakHandler(this);
 	protected RewardHandler rewards = new RewardHandler(this);
+	protected EZBlocksCommands commands = new EZBlocksCommands(this);	
+
+	protected static BlockOptions options;
 	
-	protected static List<String> enabledWorlds = new ArrayList<String>();
-	protected static String brokenMsg;
 	protected static int saveInterval;
 	protected static BukkitTask savetask;
-	protected static boolean usePickCounter;
 	
 	protected static boolean useEZRanks;
 	
-	protected EZBlocksCommands commands = new EZBlocksCommands(this);
+	private static EZBlocks ezblocks;
 	
 	@Override
 	public void onEnable() {
+		
+		ezblocks = this;
+		
 		config.loadConfigurationFile();
 		loadOptions();
 		playerconfig.reload();
 		playerconfig.save();
-		
 		registerListeners();
 		startSaveTask();
+		getCommand("blocks").setExecutor(commands);
 		getLogger().info(config.loadGlobalRewards()+" global rewards loaded!");
 		
 		if (hookEZRanksLite()) {
 			getLogger().info("Successfully hooked into EZRanksLite!");
 		}
 		
-		getCommand("blocks").setExecutor(commands);
-		
 	}
 	
 	private void loadOptions() {
-		brokenMsg = getConfig().getString("blocks_broken_message");
-		enabledWorlds = getConfig().getStringList("enabled_worlds");
 		saveInterval = getConfig().getInt("save_interval");
-		usePickCounter = getConfig().getBoolean("use_pickaxe_counter");
+		options = new BlockOptions();
+		options.setBrokenMsg(getConfig().getString("blocks_broken_message"));
+		options.setEnabledWorlds(getConfig().getStringList("enabled_worlds"));
+		options.setUsePickCounter(getConfig().getBoolean("use_pickaxe_counter"));
+		options.setPickaxeNeverBreaks(getConfig().getBoolean("pickaxe_never_breaks"));
+		options.setOnlyBelowY(getConfig().getBoolean("only_track_below_y.enabled"));
+		options.setBelowYCoord(getConfig().getInt("only_track_below_y.coord"));
 	}
 	
 	protected void reload() {
@@ -82,12 +86,11 @@ public class EZBlocks extends JavaPlugin {
 		}
 		}
 		RewardHandler.rewards = null;
-		
+		ezblocks = null;
 	}
 	
 	protected void registerListeners() {
 		Bukkit.getServer().getPluginManager().registerEvents(breakhandler, this);
-	
 	}
 	
 	private void startSaveTask() {
@@ -104,12 +107,26 @@ public class EZBlocks extends JavaPlugin {
 	}
 
 	private void stopSaveTask() {
-	if (savetask != null) {
-		savetask.cancel();
-		savetask = null;
+		if (savetask != null) {
+			savetask.cancel();
+			savetask = null;
+		}
 	}
-}
 	
+	public int getBlocksBroken(Player p) {
+		if (BreakHandler.breaks != null
+				&& BreakHandler.breaks.containsKey(p.getUniqueId().toString())) {
+			return BreakHandler.breaks.get(p.getUniqueId().toString());
+		}
+		else {
+			return 0;
+		}
+			
+	}
+
+	public static EZBlocks getEZBlocks() {
+		return ezblocks;
+	}
 	
 
 }

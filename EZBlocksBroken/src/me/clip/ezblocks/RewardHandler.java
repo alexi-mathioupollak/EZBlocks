@@ -50,7 +50,7 @@ public class RewardHandler {
 		
 		for (String cmd : r.getCommands()) {
 			
-			String f = cmd.replace("@p", p.getName()).replace("@breaks", breaks+"");
+			String f = cmd.replace("%player%", p.getName()).replace("%blocksbroken%", breaks+"");
 			
 			if (cmd.startsWith("ezmsg")) {
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', f.replace("ezmsg ", "")));

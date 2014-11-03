@@ -1,7 +1,5 @@
 package me.clip.ezblocks;
 
-
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -36,7 +34,7 @@ public class EZBlocksCommands implements CommandExecutor {
 		
 		if (args.length == 0) {
 			if (BreakHandler.breaks.containsKey(uuid)) {
-				sms(s, EZBlocks.brokenMsg.replace("%player%", p.getName())
+				sms(s, EZBlocks.options.getBrokenMsg().replace("%player%", p.getName())
 						.replace("%blocksbroken%", BreakHandler.breaks.get(uuid)+""));
 				return true;
 			}
@@ -47,11 +45,12 @@ public class EZBlocksCommands implements CommandExecutor {
 				else {
 					BreakHandler.breaks.put(uuid, 0);
 				}
-				sms(s, EZBlocks.brokenMsg.replace("%player%", p.getName())
+				sms(s, EZBlocks.options.getBrokenMsg().replace("%player%", p.getName())
 						.replace("%blocksbroken%", BreakHandler.breaks.get(uuid)+""));	
 			}
 			return true;
 		}
+		
 		else if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("help")) {
 				if (!p.hasPermission("ezblocks.admin")
@@ -104,7 +103,7 @@ public class EZBlocksCommands implements CommandExecutor {
 					String uid = target.getUniqueId().toString();
 					
 					if (BreakHandler.breaks.containsKey(uid)) {
-						sms(s, EZBlocks.brokenMsg.replace("%player%", target.getName())
+						sms(s, EZBlocks.options.getBrokenMsg().replace("%player%", target.getName())
 								.replace("%blocksbroken%", BreakHandler.breaks.get(uid)+""));
 						return true;
 					}
@@ -115,7 +114,7 @@ public class EZBlocksCommands implements CommandExecutor {
 						else {
 							BreakHandler.breaks.put(uid, 0);
 						}
-						sms(s, EZBlocks.brokenMsg.replace("%player%", target.getName())
+						sms(s, EZBlocks.options.getBrokenMsg().replace("%player%", target.getName())
 								.replace("%blocksbroken%", BreakHandler.breaks.get(uid)+""));	
 					}
 					

@@ -22,6 +22,9 @@ public class EZBlocksConfig {
 		c.options().header("EZBlocks version "+plugin.getDescription().getVersion()+" Main configuration file.");
 		c.addDefault("save_interval", 5);
 		c.addDefault("use_pickaxe_counter", true);
+		c.addDefault("pickaxe_never_breaks", true);
+		c.addDefault("only_track_below_y.enabled", false);
+		c.addDefault("only_track_below_y.coord", 50);
 		c.addDefault("enabled_worlds", Arrays.asList(new String[] {
 				"world", "world_nether", "all"
 		}));
