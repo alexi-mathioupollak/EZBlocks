@@ -96,7 +96,8 @@ public class BreakHandler implements Listener {
 
 			ItemStack i = e.getPlayer().getItemInHand();
 
-			if (i.getType().equals(Material.DIAMOND_PICKAXE)
+			if (i.getType().equals(Material.NETHERITE_PICKAXE)
+			    		|| i.getType().equals(Material.DIAMOND_PICKAXE)
 					|| i.getType().equals(Material.GOLD_PICKAXE)
 					|| i.getType().equals(Material.IRON_PICKAXE)
 					|| i.getType().equals(Material.STONE_PICKAXE)) {
@@ -156,7 +157,7 @@ public class BreakHandler implements Listener {
 
 							String line = lore.get(l);
 
-							if (line.contains("ง7Blocks broken: งe")) {
+							if (line.contains("ยง7Blocks broken: ยงe")) {
 
 								contains = true;
 								replace = line;
@@ -167,26 +168,26 @@ public class BreakHandler implements Listener {
 
 						if (contains && replace != null) {
 
-							String num = replace.replace("ง7Blocks broken: งe",
+							String num = replace.replace("ยง7Blocks broken: ยงe",
 									"");
 
 							if (!isInt(num)) {
 
-								lore.add("ง7Blocks broken: งe1");
+								lore.add("ยง7Blocks broken: ยงe1");
 								im.setLore(lore);
 								i.setItemMeta(im);
 								return;
 							}
 
 							int updated = Integer.parseInt(num.trim()) + 1;
-							lore.add("ง7Blocks broken: งe" + updated);
+							lore.add("ยง7Blocks broken: ยงe" + updated);
 							im.setLore(lore);
 							i.setItemMeta(im);
 							return;
 
 						} else {
 
-							lore.add("ง7Blocks broken: งe1");
+							lore.add("ยง7Blocks broken: ยงe1");
 							im.setLore(lore);
 							i.setItemMeta(im);
 							return;
@@ -195,7 +196,7 @@ public class BreakHandler implements Listener {
 					} else {
 
 						List<String> lore = Arrays
-								.asList(new String[] { "ง7Blocks broken: งe1" });
+								.asList(new String[] { "ยง7Blocks broken: ยงe1" });
 						im.setLore(lore);
 						i.setItemMeta(im);
 						return;
